@@ -46,6 +46,16 @@ public class MethodSignature {
         return arguments;
     }
 
+    @Override
+    public String toString() {
+        return "MethodSignature{" +
+                "accessModifier='" + accessModifier + '\'' +
+                ", returnType='" + returnType + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", arguments=" + arguments +
+                '}';
+    }
+
     public static class Argument {
         private String type;
         private String name;
