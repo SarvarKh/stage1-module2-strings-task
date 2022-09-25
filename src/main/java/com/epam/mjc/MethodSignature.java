@@ -56,7 +56,7 @@ public class MethodSignature {
                 '}';
     }
 
-    public static class Argument {
+    public class Argument {
         private String type;
         private String name;
 

@@ -31,11 +31,8 @@ public class MethodParser {
 
             String methodDeclaration = signatureString.substring(0, openingParenthesis);
             String methodArguments = signatureString.substring(openingParenthesis + 1, closingParenthesis - 1);
-    //        System.out.println(methodDeclaration);
-            System.out.println(methodArguments);
 
             String[] methodDeclarationArr = methodDeclaration.split(" ", 0);
-    //        System.out.println(methodDeclarationArr[methodDeclarationArr.length - 1]);
             MethodSignature methodSignature = new MethodSignature(methodDeclarationArr[methodDeclarationArr.length - 1]);
             if (methodDeclarationArr.length == 3) {
                 methodSignature.setAccessModifier(methodDeclarationArr[0]);
@@ -45,30 +42,21 @@ public class MethodParser {
             }
 
             String[] methodArgumentsArr = methodArguments.split(", ", 0);
-//            System.out.println(methodArgumentsArr[0]);
-//            System.out.println(methodArgumentsArr[1]);
-//            System.out.println(methodArgumentsArr[2]);
             if (methodArgumentsArr.length > 0) {
                 String[] firstArgArr = methodArgumentsArr[0].split(" ");
                 MethodSignature.Argument argument = methodSignature.new Argument(firstArgArr[0], firstArgArr[1]);
-//                int count = 0;
-//                while (count < methodArgumentsArr.length) {
-////                    System.out.println(methodArgumentsArr[count]);
-//                    String[] singleArgArr = methodArgumentsArr[count].split(" ");
-//                    System.out.println(singleArgArr[0]);
-//                    System.out.println(singleArgArr[1]);
-//                    System.out.println("");
-//
-//                    count++;
-//                }
+                int count = 1;
+                while (count < methodArgumentsArr.length) {
+                    String[] singleArgArr = methodArgumentsArr[count].split(" ");
+                    argument.setType(singleArgArr[0]);
+                    argument.setName(singleArgArr[1]);
+
+                    count++;
+                }
             }
 
-
-
-    //        ******* Print final output *******
             System.out.println(methodSignature.toString());
             return methodSignature;
-
         } catch (UnsupportedOperationException e) {
             throw new UnsupportedOperationException("You should implement this method.");
         }
