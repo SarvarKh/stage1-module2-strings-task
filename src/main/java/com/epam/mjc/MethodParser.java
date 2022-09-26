@@ -1,5 +1,8 @@
 package com.epam.mjc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MethodParser {
 
     /**
@@ -19,21 +22,33 @@ public class MethodParser {
      * @param signatureString source string to parse
      * @return {@link MethodSignature} object filled with parsed values from source string
      */
-    public static void main(String args[]) {
-        String s = "private void log(String logString, LogLevel level, Context context)";
-        MethodParser methodParser = new MethodParser();
-        methodParser.parseFunction(s);
-    }
     public MethodSignature parseFunction(String signatureString) {
         try {
             int openingParenthesis = signatureString.indexOf(40);
             int closingParenthesis = signatureString.indexOf(41) + 1;
 
             String methodDeclaration = signatureString.substring(0, openingParenthesis);
-            String methodArguments = signatureString.substring(openingParenthesis + 1, closingParenthesis - 1);
+            String methodArguments;
+            methodArguments = openingParenthesis + 1 == closingParenthesis - 1 ?
+                    ", " :
+                    signatureString.substring(openingParenthesis + 1, closingParenthesis - 1);
 
             String[] methodDeclarationArr = methodDeclaration.split(" ", 0);
-            MethodSignature methodSignature = new MethodSignature(methodDeclarationArr[methodDeclarationArr.length - 1]);
+            String[] methodArgumentsArr = methodArguments.split(", ", 0);
+
+            List<MethodSignature.Argument> arguments = new ArrayList<>();
+            if (methodArgumentsArr.length > 0) {
+                int count = 0;
+                while (count < methodArgumentsArr.length) {
+                    String[] singleArgArr = methodArgumentsArr[count].split(" ");
+                    arguments.add(new MethodSignature.Argument(singleArgArr[0], singleArgArr[1]));
+                    count++;
+                }
+            }
+
+            MethodSignature methodSignature = new MethodSignature(
+                    methodDeclarationArr[methodDeclarationArr.length - 1],
+                    arguments);
             if (methodDeclarationArr.length == 3) {
                 methodSignature.setAccessModifier(methodDeclarationArr[0]);
                 methodSignature.setReturnType(methodDeclarationArr[1]);
@@ -41,19 +56,6 @@ public class MethodParser {
                 methodSignature.setReturnType(methodDeclarationArr[0]);
             }
 
-            String[] methodArgumentsArr = methodArguments.split(", ", 0);
-            if (methodArgumentsArr.length > 0) {
-                String[] firstArgArr = methodArgumentsArr[0].split(" ");
-                MethodSignature.Argument argument = methodSignature.new Argument(firstArgArr[0], firstArgArr[1]);
-                int count = 1;
-                while (count < methodArgumentsArr.length) {
-                    String[] singleArgArr = methodArgumentsArr[count].split(" ");
-                    argument.setType(singleArgArr[0]);
-                    argument.setName(singleArgArr[1]);
-
-                    count++;
-                }
-            }
 
             System.out.println(methodSignature.toString());
             return methodSignature;
